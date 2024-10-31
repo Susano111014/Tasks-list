@@ -5,4 +5,9 @@ public class TaskCli {
     String description;
     Date createdAt;
     Date updatedAt;
+    Status status;
+}
+
+enum Status {
+    TODO, IN_PROGRESS, DONE
 }
