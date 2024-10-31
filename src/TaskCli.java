@@ -1,8 +1,9 @@
 import java.util.Date;
+import java.util.Scanner;
 
 public class TaskCli {
     int id;
-    String description;
+    private String description;
     Date createdAt;
     Date updatedAt;
     Status status;
@@ -17,8 +18,18 @@ public class TaskCli {
         System.out.println("You can Listing tasks by status with 'list <tasks-status>'");
     }
 
-    public static void main (String[] input){
+    void addNewTask(Scanner description){
+        Scanner newDescription = description.useDelimiter("\\s*add\\s*");
+        this.description =  newDescription.nextLine();
+        System.out.println("the task " + this.description + " has been successfully added");
+    };
+
+    void commandType(Scanner userCommand){
         tasksCommands();
+        switch (userCommand.next()){
+            case ("add"):
+                addNewTask(userCommand);
+        }
     }
 
 }
