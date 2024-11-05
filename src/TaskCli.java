@@ -1,8 +1,6 @@
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.LocalDate;
@@ -10,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TaskCli {
+    static private Map<Integer, TaskCli> idCollection = new HashMap<>();
     int id;
     static int mayorId = 0;
     private String description;
@@ -34,7 +33,8 @@ public class TaskCli {
 
         TaskCli.mayorId++;
         this.id = TaskCli.mayorId;
-
+        TaskCli.idCollection.put(this.id, this);
+        System.out.println("The ids collection are " + TaskCli.idCollection.keySet());
         this.createdAt = LocalDateTime.now();
         System.out.println("the task has been created at " + this.createdAt.minusNanos(this.createdAt.getNano()));
     };
@@ -50,13 +50,22 @@ public class TaskCli {
         System.out.println("their status is "+ this.status.name());
     }
 
+    void modifyTask(Scanner userCommand){
+
+    }
+
     void commandType(Scanner userCommand){
-        tasksCommands();
+
         switch (userCommand.next()){
             case ("add"):
                 addNewTask(userCommand);
+                break;
+            case ("update"):
+                modifyTask(userCommand);
+                break;
             default:
                 markTask(userCommand);
+
         }
     }
 
