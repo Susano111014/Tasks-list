@@ -27,15 +27,16 @@ public class TaskCli {
         System.out.println("#Listing tasks by status with 'list <tasks-status>'");
     }
 
-    void addNewTask(Scanner description){
-        this.description =  description.useDelimiter("\\s*add\\s*").nextLine();
-        System.out.println("the task " + this.description + " has been successfully added");
+    static void addNewTask(Scanner description){
+        TaskCli newTask = new TaskCli();
+        newTask.description =  description.useDelimiter("\\s*add\\s*").nextLine();
+        System.out.println("the task " + newTask.description + " has been successfully added");
         TaskCli.mayorId++;
-        this.id = TaskCli.mayorId;
-        TaskCli.idCollection.put(this.id, this);
+        newTask.id = TaskCli.mayorId;
+        TaskCli.idCollection.put(newTask.id, newTask);
         System.out.println("The ids collection are " + TaskCli.idCollection.keySet());
-        this.createdAt = LocalDateTime.now();
-        System.out.println("the task has been created at " + this.createdAt.minusNanos(this.createdAt.getNano()));
+        newTask.createdAt = LocalDateTime.now();
+        System.out.println("the task has been created at " + newTask.createdAt.minusNanos(newTask.createdAt.getNano()));
         description.close();
     };
 
@@ -54,23 +55,19 @@ public class TaskCli {
         }
     }
 
-    void modifyTask(Scanner userCommand){
+//    void modifyTask(Scanner userCommand){
+//
+//    }
 
-    }
-
-    void commandType(Scanner userCommand){
-        String theCommand = userCommand.next();
-        switch (theCommand){
-            case ("add"):
-                addNewTask(userCommand);
-                break;
-            case ("update"):
-                modifyTask(userCommand);
-                break;
-            default:
-                TaskCli.markTask(theCommand, userCommand);
-
+    static void commandType(Scanner userPrompt){
+        String theCommand = userPrompt.next();
+        
+        if (Pattern.matches("add", theCommand)) {
+            TaskCli.addNewTask(userPrompt);
+        } else if (Pattern.matches("^mark-\\w+-*\\w+", theCommand)) {
+            TaskCli.markTask(theCommand, userPrompt);
         }
+
     }
 
 }
