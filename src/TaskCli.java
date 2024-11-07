@@ -46,13 +46,12 @@ public class TaskCli {
             case "mark-in-progress" -> TaskCli.idCollection.get(id).status = Status.IN_PROGRESS;
             case "mark-done" -> TaskCli.idCollection.get(id).status = Status.DONE;
             case "mark-as-todo" -> TaskCli.idCollection.get(id).status = Status.TODO;
+            default -> System.out.println("Command not recognized");
         }
 
-        TaskCli.idCollection.forEach( (k, v) -> {
-            if( v.status != null){
-            System.out.println("their status of the Task: " + k + " is " + v.status.name());
-            };
-        } );
+        if (TaskCli.idCollection.get(id).status != null) {
+            System.out.println("their status of the Task: " + id + " is " + TaskCli.idCollection.get(id).status.name());
+        }
     }
 
     void modifyTask(Scanner userCommand){
