@@ -20,7 +20,7 @@ public class TaskCli {
         System.out.println("#create a new task with 'add <task>'");
         System.out.println("#delete tasks with 'delete <task-number>'");
         System.out.println("#update a task with 'update <task-number> <update-task>'");
-        System.out.println("#mark tasks as it will be make it with 'todo <task-number>'");
+        System.out.println("#mark tasks as it will be make it with 'mark-todo <task-number>'");
         System.out.println("#mark tasks with 'mark-done <task-number>'");
         System.out.println("#mark task as in progress with 'mark-in-progress <task-number>'");
         System.out.println("#Listing all tasks with 'list-all'");
@@ -30,24 +30,29 @@ public class TaskCli {
     void addNewTask(Scanner description){
         this.description =  description.useDelimiter("\\s*add\\s*").nextLine();
         System.out.println("the task " + this.description + " has been successfully added");
-
         TaskCli.mayorId++;
         this.id = TaskCli.mayorId;
         TaskCli.idCollection.put(this.id, this);
         System.out.println("The ids collection are " + TaskCli.idCollection.keySet());
         this.createdAt = LocalDateTime.now();
         System.out.println("the task has been created at " + this.createdAt.minusNanos(this.createdAt.getNano()));
+        description.close();
     };
 
-    void markTask(Scanner userCommand){
-        if (userCommand.findInLine("mark-in-progress") != null) {
-            this.status = Status.IN_PROGRESS;
-        }else if (userCommand.findInLine("mark-done") != null) {
-            this.status = Status.DONE;
-        } else if (userCommand.findInLine("todo") != null) {
-            this.status = Status.TODO;
+    static void markTask(String theCommand , Scanner userCommand){
+
+        Integer id =  userCommand.nextInt();
+        switch (theCommand) {
+            case "mark-in-progress" -> TaskCli.idCollection.get(id).status = Status.IN_PROGRESS;
+            case "mark-done" -> TaskCli.idCollection.get(id).status = Status.DONE;
+            case "mark-as-todo" -> TaskCli.idCollection.get(id).status = Status.TODO;
         }
-        System.out.println("their status is "+ this.status.name());
+
+        TaskCli.idCollection.forEach( (k, v) -> {
+            if( v.status != null){
+            System.out.println("their status of the Task: " + k + " is " + v.status.name());
+            };
+        } );
     }
 
     void modifyTask(Scanner userCommand){
@@ -55,8 +60,8 @@ public class TaskCli {
     }
 
     void commandType(Scanner userCommand){
-
-        switch (userCommand.next()){
+        String theCommand = userCommand.next();
+        switch (theCommand){
             case ("add"):
                 addNewTask(userCommand);
                 break;
@@ -64,7 +69,7 @@ public class TaskCli {
                 modifyTask(userCommand);
                 break;
             default:
-                markTask(userCommand);
+                TaskCli.markTask(theCommand, userCommand);
 
         }
     }
